@@ -1,0 +1,159 @@
+<%- include('./partials/header'); -%> <%- include('./partials/sidebar'); -%>
+
+
+<script nonce="d71d2e74-61fd-470a-8ac4-921ce1fcd04e">(function(w,d){!function(f,g,h,i){f[h]=f[h]||{};f[h].executed=[];f.zaraz={deferred:[],listeners:[]};f.zaraz.q=[];f.zaraz._f=function(j){return function(){var k=Array.prototype.slice.call(arguments);f.zaraz.q.push({m:j,a:k})}};for(const l of["track","set","debug"])f.zaraz[l]=f.zaraz._f(l);f.zaraz.init=()=>{var m=g.getElementsByTagName(i)[0],n=g.createElement(i),o=g.getElementsByTagName("title")[0];o&&(f[h].t=g.getElementsByTagName("title")[0].text);f[h].x=Math.random();f[h].w=f.screen.width;f[h].h=f.screen.height;f[h].j=f.innerHeight;f[h].e=f.innerWidth;f[h].l=f.location.href;f[h].r=g.referrer;f[h].k=f.screen.colorDepth;f[h].n=g.characterSet;f[h].o=(new Date).getTimezoneOffset();if(f.dataLayer)for(const s of Object.entries(Object.entries(dataLayer).reduce(((t,u)=>({...t[1],...u[1]})),{})))zaraz.set(s[0],s[1],{scope:"page"});f[h].q=[];for(;f.zaraz.q.length;){const v=f.zaraz.q.shift();f[h].q.push(v)}n.defer=!0;for(const w of[localStorage,sessionStorage])Object.keys(w||{}).filter((y=>y.startsWith("_zaraz_"))).forEach((x=>{try{f[h]["z_"+x.slice(7)]=JSON.parse(w.getItem(x))}catch{f[h]["z_"+x.slice(7)]=w.getItem(x)}}));n.referrerPolicy="origin";n.src="/cdn-cgi/zaraz/s.js?z="+btoa(encodeURIComponent(JSON.stringify(f[h])));m.parentNode.insertBefore(n,m)};["complete","interactive"].includes(g.readyState)?zaraz.init():f.addEventListener("DOMContentLoaded",zaraz.init)}(w,d,"zarazData","script");})(window,document);</script></head>
+
+
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Add Blog</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item active">Add Blog</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-outline card-info">
+          <div class="card-header">
+            <h3 class="card-title">Post A Blog</h3>
+          </div>
+
+          <div class="card-body">
+
+            <div class="alert alert-success" style="display: none"></div>
+            <div class="alert alert-danger" style="display: none"></div>
+
+            <form id="blogForm" enctype="multipart/form-data">
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Blog Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="blogTitle"
+                  placeholder="Enter Blog Title"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Service Category</label>
+
+                <select class="form-control" name="blogCategory">
+                  <option value="">Select Category</option>
+                  <% category.forEach((item) => { %>
+                  <option value="<%= item.id %>"><%= item.cat %></option>
+                  <% }); %>
+                </select>
+              </div>
+
+
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Blog Description</label>
+                <textarea id="summernote" name="blogDescp">
+                </textarea>
+              </div>
+
+
+              <div class="form-group">
+                <label for="exampleInputEmail1">Blog Image</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  name="bimg"
+                  id="bimg"
+                  placeholder="Enter Service Name"
+                />
+              </div>
+
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="/blog" class="btn btn-default">Back</a>
+              </div>
+
+
+           
+          </form>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<%- include('./partials/footer'); -%>
+
+
+<script>
+  $(document).ready(function() {
+  $('#summernote').summernote({
+  });
+ });
+</script>
+
+
+
+<script>
+  //Add categories
+
+  $("#blogForm").submit(function (e) {
+    e.preventDefault();
+    var hasImage = $("#bimg").get(0).files.length > 0;
+    var formData = new FormData(this);
+
+    if (!hasImage) {
+      formData.delete("bimg");
+    }
+
+    // Send AJAX request
+    $.ajax({
+      type: "POST",
+      url: "/insertBlog",
+      data: formData,
+      processData: false,
+      contentType: false,
+
+      success: function (response) {
+        // Display success message or redirect to another page
+        if (response) {
+          $(".alert-success")
+            .text("Add Successfully!")
+            .fadeIn()
+            .delay(1000)
+            .fadeOut();
+
+          $("#bimg").val(""); // Reset image input
+          $("#summernote").val(""); // Reset image input
+          $("#blogForm")[0].reset();
+          
+        } else {
+          $(".alert-danger")
+            .text(response.message)
+            .fadeIn()
+            .delay(1000)
+            .fadeOut();
+        }
+      },
+      error: function (err) {
+        // Display error message
+        $(".alert-danger")
+          .text(err.responseJSON.message)
+          .fadeIn()
+          .delay(1000)
+          .fadeOut();
+      },
+    });
+  });
+</script>
+

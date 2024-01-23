@@ -1,0 +1,152 @@
+<%- include('./partials/header'); -%> <%- include('./partials/sidebar'); -%>
+
+<div class="content-wrapper" style="min-height: 1246.5px">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Add Portfolio</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item active">Add Portfolio</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+          <!-- general form elements -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Portfolio</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+
+            <div class="alert alert-success" style="display: none"></div>
+            <div class="alert alert-danger" style="display: none"></div>
+
+            <form id="portfolioForm" enctype="multipart/form-data">
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Title</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="title"
+                    placeholder="Enter Title"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputEmail1"> Description </label>
+                  <textarea
+                    class="form-control"
+                    name="descp"
+                    placeholder="Enter Description"
+                  ></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleInputEmail1"> Category</label>
+
+                  <select class="form-control" name="category">
+                    <option value="">Select Category</option>
+                    <% category.forEach((item) => { %>
+                    <option value="<%= item.id %>"><%= item.cat %></option>
+                    <% }); %>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Portfolio Image</label>
+                  <input
+                    type="file"
+                    name="pimg"
+                    class="form-control"
+                    id="pimg"
+                  />
+                </div>
+              </div>
+              <!-- /.card-body -->
+
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="/portfolio" class="btn btn-default">Back</a>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-3"></div>
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+<%- include('./partials/footer'); -%>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+
+<script>
+  //Add categories
+
+  $("#portfolioForm").submit(function (e) {
+    e.preventDefault();
+    // var formData = $(this).serialize();
+
+    var hasImage = $("#pimg").get(0).files.length > 0;
+    var formData = new FormData(this);
+
+    if (!hasImage) {
+      formData.delete("pimg");
+    }
+
+    // Send AJAX request
+    $.ajax({
+      type: "POST",
+      url: "/insertPortfolio",
+      data: formData,
+      processData: false,
+      contentType: false,
+
+      success: function (response) {
+        // Display success message or redirect to another page
+        if (response) {
+          $(".alert-success")
+            .text("Add Successfully!")
+            .fadeIn()
+            .delay(1000)
+            .fadeOut();
+
+          $("#pimg").val(""); // Reset image input
+          $("#portfolioForm")[0].reset();
+        } else {
+          $(".alert-danger")
+            .text(response.message)
+            .fadeIn()
+            .delay(1000)
+            .fadeOut();
+        }
+      },
+      error: function (err) {
+        // Display error message
+        $(".alert-danger")
+          .text(err.responseJSON.message)
+          .fadeIn()
+          .delay(1000)
+          .fadeOut();
+      },
+    });
+  });
+</script>

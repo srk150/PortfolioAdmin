@@ -1,0 +1,144 @@
+<%- include('./partials/header'); -%> <%- include('./partials/sidebar'); -%>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Contact</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item active">Contact</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+
+  <section class="content">
+    <div class="card">
+      <div class="card-body row">
+        <div
+          class="col-5 text-center d-flex align-items-center justify-content-center"
+        >
+          <div class="">
+            <h2><strong><%= cname %></strong></h2>
+            <p class="lead mb-5">
+              <%= caddress %><br />
+              Phone: +91<%= cmobile %><br />
+              <!-- Email: <%= cemail %><br />
+              Website: <%= cwebsite %> -->
+            </p>
+          </div>
+        </div>
+        <div class="col-7">
+          <div class="alert alert-success" style="display: none"></div>
+          <div class="alert alert-danger" style="display: none"></div>
+
+          <form id="contactForm">
+            <div class="form-group">
+              <label for="inputName">Name</label>
+              <input type="text" name="name" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="inputEmail">E-Mail</label>
+              <input type="email" name="email" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="inputSubject">Subject</label>
+              <input type="text" name="subject" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="inputMessage">Message</label>
+              <textarea
+                id="inputMessage"
+                class="form-control"
+                rows="4"
+                name="msg"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <input
+                type="submit" id="fgotmailer"
+                class="btn btn-primary contact"
+                value="Send message"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Main content -->
+
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<%- include('./partials/footer'); -%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+  //contact form
+  $(document).ready(function () {
+    $("#contactForm").submit(function (e) {
+      e.preventDefault();
+      const sendButton = document.getElementById("fgotmailer");
+      sendButton.disabled = true;
+      sendButton.textContent = "Sending...";
+
+      var formData = $(this).serialize();
+
+      // Send AJAX request
+      $.ajax({
+        type: "POST",
+        url: "/contact_user",
+        data: formData,
+
+        success: function (response) {
+          if (response) {
+            $(".alert-success")
+              .text("Update Successfully!")
+              .fadeIn()
+              .delay(1000)
+              .fadeOut();
+
+            $("#contactForm")[0].reset();
+            sendButton.textContent = "Sent!";
+
+          } else {
+            $(".alert-danger")
+              .text(response.message)
+              .fadeIn()
+              .delay(1000)
+              .fadeOut();
+            sendButton.textContent = "Error!";
+
+          }
+        },
+        error: function (err) {
+          // Display error message
+          $(".alert-danger")
+            .text(err.responseJSON.message)
+            .fadeIn()
+            .delay(1000)
+            .fadeOut();
+          sendButton.textContent = "Error!";
+
+        },
+        complete: function () {
+        sendButton.disabled = false;
+        sendButton.textContent = "Send message";
+      },
+      });
+    });
+  });
+
+</script>

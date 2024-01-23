@@ -1,0 +1,354 @@
+<%- include('./partials/header'); -%> <%- include('./partials/sidebar'); -%>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content section-->
+    <section class="content-header">
+     <!-- container-fluid -->
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Profile</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+              <li class="breadcrumb-item active">Profile</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- Content section-->
+
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3" >
+
+            <!-- Profile Image -->
+            <div class="card card-primary card-outline">
+              <div class="card-body box-profile" id="profilebox">
+                <div class="text-center">
+                  <img class="profile-user-img img-fluid img-circle"
+                       src="<%= baseUrl %>uploads/<%= profile %>"
+                       alt="User profile picture">
+                </div>
+
+                <h3 class="profile-username text-center"><%= name %> (<%= username %>)</h3>
+
+                <p class="text-muted text-center"><%= occupation %></p>
+
+                <ul class="list-group list-group-unbordered mb-3">
+
+                  <li class="list-group-item">
+                    <b>Website</b> <a class="float-right"><%= baseUrl %>login</a>
+                  </li>
+                  
+                  <li class="list-group-item">
+                    <b>Email</b> <a class="float-right"><%= email %></a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Mobile</b> <a class="float-right"><%= mobile %></a>
+                  </li>
+                 
+                </ul>
+
+                <a href="/login/logout" class="btn btn-primary btn-block"><b>Logout</b></a>
+              </div>
+              <!-- /.card-body -->
+            </div>
+
+
+          
+            
+          </div>
+          <!-- /.col -->
+
+          <div class="col-md-9">
+            <div class="card">
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Profile</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Password</a></li>
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="active tab-pane" id="activity">
+                    <!-- Post -->
+
+                    <div class="alert alert-success" style="display: none"></div>
+                    <div class="alert alert-danger" style="display: none"></div>
+                    <form class="form-horizontal" id="profileForm" enctype="multipart/form-data">
+
+                      <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Fullname</label>
+                        <div class="col-sm-4">
+                          <input type="text" class="form-control" name="fullname" value="<%= name %>" placeholder="Fullname">
+                        </div>
+                        <label for="inputName" class="col-sm-2 col-form-label">Username</label>
+                        <div class="col-sm-4">
+                          <input type="text" class="form-control" name="username" value="<%= username %>" placeholder="Username">
+                        </div>
+
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                          <input type="email" class="form-control" name="email" value="<%= email %>" id="inputEmail" placeholder="Email" readonly>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label for="inputEmail" class="col-sm-2 col-form-label">Mobile</label>
+                        <div class="col-sm-10">
+                          <input type="number" min="0" name="mobile" class="form-control" value="<%= mobile %>" id="inputEmail" placeholder="Mobile">
+                        </div>
+                      </div>
+
+
+                      <div class="form-group row">
+                        <label for="inputEmail" class="col-sm-2 col-form-label">Occupation</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" name="occupation" value="<%= occupation %>" id="inputEmail" placeholder="Occupation">
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label for="inputEmail" class="col-sm-2 col-form-label">Profile</label>
+                        <div class="col-sm-10">
+                          <input type="file" name="profilepic" class="form-control" id="profilepic">
+                        </div>
+                      </div>
+                     
+                      
+                      <div class="form-group row">
+                        <div class="offset-sm-2 col-sm-10">
+                        <button type="submit" class="btn btn-danger">Submit</button>
+                      </div>
+                      <div id="erMsg" class="text-info"></div>
+
+                      
+
+                      </div>
+                    </form>
+
+
+                    <!-- /.post -->
+                  </div>
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="timeline">
+                    <div class="alert alert-success" style="display: none"></div>
+                    <div class="alert alert-danger" style="display: none"></div>
+
+                  <form class="form-horizontal" id="changepasswordForm">
+                      <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-10">
+                          <input type="password" class="form-control" name="password" placeholder="Password">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputEmail" class="col-sm-2 col-form-label">Confirm Password</label>
+                        <div class="col-sm-10">
+                          <input type="password" class="form-control" name="cpassword" placeholder="Confirm Password">
+                        </div>
+                      </div>
+                     
+                      
+                      <div class="form-group row">
+                        <div class="offset-sm-2 col-sm-10">
+                          <button type="submit" class="btn btn-danger">Submit</button>
+                        </div>
+                        <div id="erMsg2" class="text-info"></div>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+       
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <%- include('./partials/footer'); -%>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $("#profileForm").submit(function (e) {
+        e.preventDefault();
+        // var formData = $(this).serialize();
+
+        var hasImage = $('#profilepic').get(0).files.length > 0;
+        var formData = new FormData(this);
+
+        if (!hasImage) {
+          formData.delete('image');
+        }
+
+
+        // Send AJAX request
+        $.ajax({
+          type: "POST",
+          url: "/index/updateProfile",
+          data: formData,
+          processData: false,
+          contentType: false,
+
+          success: function (response) {
+            // Display success message or redirect to another page
+            if (response) {
+              // window.location.href = "/profile";
+              $("#profilebox").load(location.href + " #profilebox");
+              $("#sidebar_info").load(location.href + " #sidebar_info");
+
+              $(".alert-success")
+            .text("Update Successfully!")
+            .fadeIn()
+            .delay(1000)
+            .fadeOut();
+
+              $('#profilepic').val(''); // Reset image input
+
+            
+
+            } else {
+             
+              
+              $(".alert-danger")
+                  .text(response.message)
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+              
+            }
+          },
+          error: function (err) {
+            // Display error message
+            $(".alert-danger")
+                  .text(err.responseJSON.message)
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+            
+          },
+        });
+      });
+    });
+    
+
+    $("#changepasswordForm").submit(function (e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+
+        // Send AJAX request
+        $.ajax({
+          type: "POST",
+          url: "/index/changepassword",
+          data: formData,
+          success: function (response) {
+            if (response) {
+             
+              
+            $(".alert-success")
+            .text("Update Successfully!")
+            .fadeIn()
+            .delay(1000)
+            .fadeOut();
+
+              $("#changepasswordForm")[0].reset();
+
+          
+            } else {
+             
+              $(".alert-danger")
+                  .text(response.message)
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+              
+            }
+          },
+          error: function (err) {
+            // Display error message
+            $(".alert-danger")
+                  .text(err.responseJSON.message)
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+            
+          },
+        });
+      });
+   
+  
+      //update settings
+
+      $("#settingForm").submit(function (e) {
+        e.preventDefault();
+        // var formData = $(this).serialize();
+
+        var hasImage = $('#clogo').get(0).files.length > 0;
+        var formData = new FormData(this);
+
+        if (!hasImage) {
+          formData.delete('clogo');
+        }
+
+
+        // Send AJAX request
+        $.ajax({
+          type: "POST",
+          url: "/index/updateSettings",
+          data: formData,
+          processData: false,
+          contentType: false,
+
+          success: function (response) {
+            // Display success message or redirect to another page
+            if (response) {
+            
+              $(".alert-success")
+            .text("Update Successfully!")
+            .fadeIn()
+            .delay(1000)
+            .fadeOut();
+
+              $("#Companybox").load(location.href + " #Companybox");
+              $('#clogo').val(''); // Reset image input
+
+            } else {
+             
+              $(".alert-danger")
+                  .text(response.message)
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+              
+            }
+          },
+          error: function (err) {
+            // Display error message
+            $(".alert-danger")
+                  .text(err.responseJSON.message)
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+          },
+        });
+      });
+  </script>
+  

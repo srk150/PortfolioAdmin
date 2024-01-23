@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Forgot Password</title>
+
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
+    />
+
+    <link
+      rel="stylesheet"
+      href="<%= baseUrl %>/plugins/fontawesome-free/css/all.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="<%= baseUrl %>/plugins/icheck-bootstrap/icheck-bootstrap.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="<%= baseUrl %>/dist/css/adminlte.min.css?v=3.2.0"
+    />
+    <link rel="icon" type="image/x-icon" href="<%= baseUrl %>/dist/img/AdminLTELogo.png">
+
+  </head>
+  <body class="hold-transition login-page">
+    <div class="login-box">
+      <div class="login-logo"></div>
+      <div class="card card-outline card-primary">
+        <div class="card-header text-center">
+          <a href="#" class="h1"><b>My</b>Panel</a>
+        </div>
+        <div class="card-body">
+          <p class="login-box-msg">
+            You forgot your password? Here you can easily retrieve a new
+            password.
+          </p>
+
+          <div class="alert alert-success" style="display: none"></div>
+          <div class="alert alert-danger" style="display: none"></div>
+          <form id="ForgotForm">
+            <div class="input-group mb-3">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                class="form-control"
+                placeholder="Email"
+              />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-envelope"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-block">
+                  Request new password
+                </button>
+              </div>
+            </div>
+          </form>
+          <p class="mt-3 mb-1">
+            <a href="/">Login</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="<%= baseUrl %>/plugins/jquery/jquery.min.js"></script>
+
+    <script src="<%= baseUrl %>/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="<%= baseUrl %>/dist/js/adminlte.min.js?v=3.2.0"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#ForgotForm").submit(function (e) {
+          e.preventDefault();
+          var formData = $(this).serialize();
+
+          // Send AJAX request
+          $.ajax({
+            type: "POST",
+            url: "/admin/forgotPassword",
+            data: formData,
+            success: function (response) {
+              // Display success message or redirect to another page
+              if (response.message) {
+                // window.location.href = "/dashboard";
+
+                $(".alert-success")
+                  .text("Email sent successfully!")
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+
+                $("#ForgotForm")[0].reset();
+              } else {
+                $(".alert-danger")
+                  .text(response.message)
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+              }
+            },
+            error: function (err) {
+              // Display error message
+
+              $(".alert-danger")
+                .text(err.responseJSON.message)
+                .fadeIn()
+                .delay(1000)
+                .fadeOut();
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

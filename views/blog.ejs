@@ -1,0 +1,186 @@
+<%- include('./partials/header'); -%> <%- include('./partials/sidebar'); -%>
+<!-- DataTables -->
+<link
+  rel="stylesheet"
+  href="<%= baseUrl %>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="<%= baseUrl %>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css"
+/>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Blog List</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+            <li class="breadcrumb-item active">Blog List</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header" style="float: right">
+            <h3 class="card-title">
+              <a href="/addBlog" class="btn btn-success">Add Blog </a>
+            </h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table id="example1" class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>Sno.</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Author</th>
+                  <th>Created Date</th>
+                  <th>Updated Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (blogdata.length > 0) { var i= 1; %> <%
+                blogdata.forEach(blogpost => { %>
+                <tr data-blog-id="<%= blogpost.id %>">
+                  <td><%= i %></td>
+                  <td>
+                    <%= blogpost.title.length > 35 ?
+                    `${blogpost.title.substring(0, 35)}...` : blogpost.title %>
+                  </td>
+
+                  <td>
+                    <%= blogpost.descp.length > 60 ?
+                    `${blogpost.descp.substring(0, 60)}...` : blogpost.descp %>
+                  </td>
+
+                  <!-- <td><%- blogpost.descp %></td> -->
+
+                  <td><%= blogpost.cat_name %></td>
+                  <td><%= blogpost.author %></td>
+                  <td><%= blogpost.created_at %></td>
+
+                  <% if(blogpost.updated_at == '0'){ %>
+                  <td><%= blogpost.created_at %></td>
+                  <% } else{ %>
+                  <td><%= blogpost.updated_at %></td>
+                  <% } %>
+
+                  <td>
+                    <button
+                      class="btn btn-danger delete-blog-btn"
+                      data-blog-id="<%= blogpost.id %>"
+                    >
+                      Delete
+                    </button>
+                    <a
+                      href="/editblog/<%= blogpost.id %>"
+                      class="btn btn-info edit-blog-btn"
+                    >
+                      Edit
+                    </a>
+                  </td>
+                </tr>
+
+                <% i++; }); %> <% } else { %>
+                <p>No blog found.</p>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+
+        <!-- /.card -->
+
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<%- include('./partials/footer'); -%>
+
+<!-- DataTables -->
+<script src="<%= baseUrl %>/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%= baseUrl %>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="<%= baseUrl %>/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="<%= baseUrl %>/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  $(function () {
+    $("#example1").DataTable({});
+  });
+
+  // delete the blog posts
+
+  $(document).ready(function () {
+    $(document).on("click", ".delete-blog-btn", function () {
+      const blogId = $(this).data("blog-id");
+
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You are about to delete the blog.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            type: "DELETE",
+            url: "/delBlog/" + blogId,
+
+            success: function (response) {
+              // Display success message or redirect to another page
+              if (response) {
+                $(".alert-success")
+                  .text("Delete Successfully!")
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+
+                // Remove the deleted data row from the table
+                $(`tr[data-blog-id="${blogId}"]`).remove();
+              } else {
+                $(".alert-danger")
+                  .text(response.message)
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+              }
+            },
+            error: function (err) {
+              // Display error message
+              $(".alert-danger")
+                .text(err.responseJSON.message)
+                .fadeIn()
+                .delay(1000)
+                .fadeOut();
+            },
+          });
+        }
+      });
+    });
+  });
+</script>

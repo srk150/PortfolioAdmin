@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Login</title>
+
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
+    />
+
+    <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css" />
+
+    <link
+      rel="stylesheet"
+      href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css"
+    />
+    <link rel="icon" type="image/x-icon" href="<%= baseUrl %>/dist/img/AdminLTELogo.png">
+
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css?v=3.2.0" />
+  </head>
+  <body class="hold-transition login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <b>Welcome To Admin</b>
+      </div>
+
+      <div class="card">
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">Sign in to start your session</p>
+
+          <div class="alert alert-success" style="display: none"></div>
+          <div class="alert alert-danger" style="display: none"></div>
+
+          <form id="loginForm">
+            <div id="message" class="text-danger"></div>
+
+            <div class="input-group mb-3">
+              <input
+                type="email"
+                name="email"
+                class="form-control"
+                placeholder="Email"
+              />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-envelope"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                placeholder="Password"
+              />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8">
+                <div class="icheck-primary">
+                  <input
+                    type="checkbox"
+                    id="remember"
+                    name="remember_me"
+                    value="1"
+                  />
+                  <label for="remember"> Remember Me </label>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <button type="submit" class="btn btn-primary btn-block">
+                  Sign In
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <p class="mb-1">
+            <a href="/forgot">I forgot my password</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="./plugins/jquery/jquery.min.js"></script>
+
+    <script src="./plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="./dist/js/adminlte.min.js?v=3.2.0"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#loginForm").submit(function (e) {
+          e.preventDefault(); // Prevent form submission
+
+          // Serialize form data
+          var formData = $(this).serialize();
+
+          // Send AJAX request
+          $.ajax({
+            type: "POST",
+            url: "/login",
+            data: formData,
+            success: function (response) {
+              // Display success message or redirect to another page
+              if (response.message) {
+                window.location.href = "/dashboard";
+              } else {
+                $(".alert-danger")
+                  .text(response.message)
+                  .fadeIn()
+                  .delay(1000)
+                  .fadeOut();
+              }
+            },
+            error: function (err) {
+              // Display error message
+
+              $(".alert-danger")
+                .text(err.responseJSON.message)
+                .fadeIn()
+                .delay(1000)
+                .fadeOut();
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
